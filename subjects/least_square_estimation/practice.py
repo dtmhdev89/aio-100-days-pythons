@@ -17,16 +17,16 @@ def compute_loss(x, y, area_np):
     print(loss)
 
 def main():
-    feature_area = [6.7, 4.6, 3.5, 5.5]
-    label_price = [9.1, 5.9, 4.6, 6.7]
+    feature_area = np.array([6.7, 4.6, 3.5, 5.5])
+    label_price = np.array([9.1, 5.9, 4.6, 6.7])
     # find linear that fits price = a * area + b
     # np array that has Arr shape (n,) that could be treated as Arr.T
     y = np.array(label_price)
-    A = np.array([feature_area, [1] * len(feature_area)]).T
-
+    A = np.vstack([feature_area, np.ones(len(feature_area))]).T
     AT = A.T
     ATxA = np.dot(AT, A)
     det_ATxA = np.linalg.det(ATxA)
+    
     if det_ATxA != 0:
         ATxA_1 = np.linalg.inv(ATxA)
         x = np.dot(ATxA_1, np.dot(AT, y))
