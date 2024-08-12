@@ -104,7 +104,9 @@ def plot_results(query_path, ls_path_score, reverse):
         plt.axis('off')
         plt.imshow(Image.open(img_path))
 
-    plt.show()
+    plt.show(block=False)
+    plt.pause(3)
+    plt.close()
 
 def read_image_from_path(path, size):
     im = Image.open(path).convert("RGB").resize(size)
