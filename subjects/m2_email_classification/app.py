@@ -1,6 +1,7 @@
 import os
 import string
 import nltk
+# add custom path to nltk
 from nltk.data import path as nltk_path
 nltk_download_path = os.path.join(os.getcwd(), 'nltk_data')
 nltk_path.append(nltk_download_path)
@@ -90,6 +91,7 @@ def main():
     le = LabelEncoder()
     y = le.fit_transform(labels)
 
+    # split train/val/test 7/2/1
     VAL_SIZE = 0.2
     TEST_SIZE = 0.125
     SEED = 0
