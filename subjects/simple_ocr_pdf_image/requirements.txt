@@ -1,0 +1,7 @@
+
+langchain==0.2.5
+langchain-community==0.2.5
+pypdf==4.2.0
+pdfminer
+unstructured
+easyocr==1.7.1
