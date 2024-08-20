@@ -4,6 +4,7 @@ from zipfile import ZipFile
 
 import cv2
 import numpy as np
+from datetime import datetime
 
 def predownload_data():
     tsukuba_gid = "14gf8bcym_lTcvjZQmg8kwq3aXkENBxMQ"
@@ -41,8 +42,10 @@ def l2_distance(x, y):
     return (x - y)**2
 
 def perform_save_result(algorithm_name, cost_method, depth):
-    cv2.imwrite(f'{algorithm_name}_{cost_method}.png', depth)
-    cv2.imwrite(f'{algorithm_name}_{cost_method}_color.png', cv2.applyColorMap(depth, cv2.COLORMAP_JET))
+    time_ref = int(datetime.now().timestamp() * 1000)
+    
+    cv2.imwrite(f'{algorithm_name}_{cost_method}_{time_ref}.png', depth)
+    cv2.imwrite(f'{algorithm_name}_{cost_method}_color_{time_ref}.png', cv2.applyColorMap(depth, cv2.COLORMAP_JET))
 
 def pixel_wise_matching(left_img, right_img, disparity_range, cost_method, save_result=True):
     left = cv2.imread(left_img, 0)
