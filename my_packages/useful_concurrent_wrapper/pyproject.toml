@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "useful_concurrent_wrapper"
+version = "0.0.1"
+authors = [
+  { name="Tran Minh Hieu Dinh", email="dtmhqng2906@gmail.com" },
+]
+description = "Some convinient ways to use concurrent lib by using a wrapper function"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/dtmhdev89/aio-100-days-pythons"
+Issues = "https://github.com/dtmhdev89/aio-100-days-pythons/issues"
