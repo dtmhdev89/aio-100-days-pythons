@@ -67,6 +67,12 @@ def main():
         print('---with multiple loc')
         print(df.loc[df['Total'] > 100].loc[df.HP <= 60])
         print(df.loc[df['Total'] > 100, ['Type 1', 'HP']].loc[df.HP <= 60])
+        # loc is based on labels (index). If values in loc don't match with labels (index), It won't return data
+        # without loc, it likes slicing object in pandas, it gets data throught indices of rows like 0, 1, 2
+        # df[0:5] will get rows from index of 0 to 4
+        # But df.loc[0:5] will return data if matched indices.
+        # df[1:5:2], but can not df[[1, 3]], can df[['Total', 'HP']]
+        # df.loc[1:5:2] and df.loc[[1, 3]], df.loc[[1, 3], ['Total', 'HP']]
         print('-----with iloc---')
         print(df.iloc[[0]])
         clear_screen()
