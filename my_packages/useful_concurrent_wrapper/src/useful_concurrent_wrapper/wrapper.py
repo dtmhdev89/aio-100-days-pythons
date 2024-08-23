@@ -8,9 +8,12 @@ def thread_pool_wrapper(tasks_with_args, with_results=False, max_workers=5):
         futures = {executor.submit(task, *args): task for task, args in tasks_with_args}
 
         if with_results:
+            results = []
+
             for future in as_completed(futures):
-                result = future.result()
-                print(result)
+                results.append(future.result())
+            
+            return results
         else:
             return futures
 
@@ -20,9 +23,12 @@ def process_pool_wrapper(tasks_with_args, with_results=False, max_workers=5):
         futures = {executor.submit(task, *args): task for task, args in tasks_with_args}
 
         if with_results:
+            results = []
+
             for future in as_completed(futures):
-                result = future.result()
-                print(result)
+                results.append(future.result())
+            
+            return results
         else:
             return futures
 
