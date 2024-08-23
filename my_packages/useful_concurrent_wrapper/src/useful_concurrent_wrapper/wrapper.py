@@ -19,7 +19,6 @@ def thread_pool_wrapper(tasks_with_args, with_results=False, max_workers=5):
 
 def process_pool_wrapper(tasks_with_args, with_results=False, max_workers=5):
     with ProcessPoolExecutor(max_workers=max_workers) as executor:
-        print('Running ProcessPoolExecutor')
         futures = {executor.submit(task, *args): task for task, args in tasks_with_args}
 
         if with_results:
