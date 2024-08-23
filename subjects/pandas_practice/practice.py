@@ -114,6 +114,8 @@ def main():
                 print(df.groupby(['Type 1'])[['Attack', 'Defense']].mean().sort_values('Defense', ascending=False))
                 print(df.groupby(['Type 1'])[['Attack', 'Defense']].mean().sort_values('Defense', ascending=0))
                 print(df.groupby(['Type 1'])[['Attack', 'Defense']].mean().sort_values('Defense', ascending=[0]))
+        
+        # We also can use df.groupby(df.HP < 50).mean()
     
     if menu_dict.get('te'):
         print('----Pandas Series action---')
