@@ -4,7 +4,6 @@ from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor, as_compl
 
 def thread_pool_wrapper(tasks_with_args, with_results=False, max_workers=5):
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
-        print('Running ThreadPoolExecutor')
         futures = {executor.submit(task, *args): task for task, args in tasks_with_args}
 
         if with_results:
