@@ -75,11 +75,9 @@ def compute_loss_mse(y, y_hat):
     return (y_hat - y)**2
 
 def compute_gradient_w(X_features, y, y_hat):
-    b, *x_i = X_features
-    dl_db = 2*(y_hat - y)
-    dl_dw = [2*xi*(y_hat-y) for xi in x_i]
+    dl_dweights = [2*xi*(y_hat-y) for xi in x_i]
     
-    return [dl_db, *dl_dw]
+    return dl_dweights
 
 def update_weight(weights, dl_weights, lr):
     return [(w - lr * dl_w) for w, dl_w in zip(weights, dl_weights)]
