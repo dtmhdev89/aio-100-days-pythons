@@ -137,5 +137,25 @@ def main():
     print('Training Accuracy (R-squared): ', round(train_accuracy, 4))
     print('Testing Accuracy (R-squared): ', round(test_accuracy, 4))
 
+    # inference
+    df_2019_q1 = df[(df['date'] >= '2019-01-01') & (df['date'] <= '2019-04-01')]
+
+    X_2019_q1 = df_2019_q1.loc[:, ['open', 'high', 'low']]
+    y_2019_q1_actual = df_2019_q1['close']
+
+    y_2019_q1_pred = predict(X_2019_q1, w, b)
+
+    plt.figure(figsize=(12, 6))
+    plt.plot(df_2019_q1['date'], y_2019_q1_actual, label='Actual Close Price', marker='o')
+    plt.plot(df_2019_q1['date'], y_2019_q1_pred, label='Predicted Close Price', marker='x')
+    plt.title('Actual Vs Predicted Bitcoin Close Price (01/01/2019 - 01/04/2019)')
+    plt.xlabel('Date')
+    plt.ylabel('Close Price (USD)')
+    plt.legend()
+    plt.grid(True)
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.show()
+
 if __name__ == "__main__":
     main()
