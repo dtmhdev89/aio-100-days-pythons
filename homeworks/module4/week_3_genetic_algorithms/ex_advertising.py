@@ -110,9 +110,9 @@ def run_GA():
     population = initialize_population(m)
     losses_list = []
 
-    for _ in range(n_generations):
+    for i in range(n_generations):
         old_population = population.copy()
-        population, loss = create_new_population(features_X, sales_y, old_population)
+        population, loss = create_new_population(features_X, sales_y, old_population, gen=i)
         losses_list.append(loss)
 
     return losses_list, population
