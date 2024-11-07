@@ -1,5 +1,7 @@
 import numpy as np
 import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, PolynomialFeatures
@@ -145,6 +147,14 @@ def main():
 
     df = pd.get_dummies(df)
     print(df.head())
+    print(f'{indication_line}df correlation:')
+    print(df.corr())
+    corr_df = df[['TV', 'Radio', 'Social Media', 'Sales']]
+    sns.heatmap(corr_df.corr(numeric_only=True), cmap='YlGnBu', annot=True)
+    plt.show()
+
+    sns.pairplot(data=df, x_vars=['TV', 'Radio', 'Social Media'], y_vars='Sales', height=5, kind='reg')
+    plt.show()
 
     print(df.mean())
     df = df.fillna(df.mean())
