@@ -6,6 +6,7 @@ import time
 import evaluate
 import pandas as pd
 import numpy as np
+import os
 
 # Load dataset
 huggingface_dataset_name = "knkarthick/dialogsum"
@@ -128,21 +129,22 @@ if perform_train_model:
     trainer.train()
 
 # Download an instruct model instead
-use_downloaded_instruct_model = True
+use_downloaded_instruct_model = False
 if use_downloaded_instruct_model:
     instruct_model_name='truocpham/flan-dialogue-summary-checkpoint'
 
     instruct_model = AutoModelForSeq2SeqLM.from_pretrained(instruct_model_name, torch_dtype=torch.bfloat16)
 
-use_local_instruct_model = False
+use_local_instruct_model = True
 if use_local_instruct_model:
-    instruct_model = AutoModelForSeq2SeqLM.from_pretrained("./flan-dialogue-summary-checkpoint-local", torch_dtype=torch.bfloat16)
+    instruct_local_checkpoint_path = os.path.join('flan-dialogue-summary-checkpoint-local')
+    instruct_model = AutoModelForSeq2SeqLM.from_pretrained(instruct_local_checkpoint_path, torch_dtype=torch.bfloat16)
 
 # Evaluate the Model Qualitatively (Human Evaluation)
 # As with many GenAI applications, a qualitative approach where you ask yourself the question "Is my model behaving the way it is supposed to?" is usually a good starting point.
 # In the example below (the same one we started this notebook with), you can see how the fine-tuned model is able to create a reasonable summary
 # of the dialogue compared to the original inability to understand what is being asked of the model.
-run_evaluation = False
+run_evaluation = True
 if run_evaluation:
     index = 200
     dialogue = dataset['test'][index]['dialogue']
@@ -329,7 +331,7 @@ if using_perf:
     tokenizer.save_pretrained(peft_model_path)
 
 # Use pretrained PEFT
-use_peft_checkpoint = True
+use_peft_checkpoint = False
 if use_peft_checkpoint:
     peft_dialogue_summary_checkpoint = 'intotheverse/peft-dialogue-summary-checkpoint'
     peft_model_base = AutoModelForSeq2SeqLM.from_pretrained("google/flan-t5-base", torch_dtype=torch.bfloat16)
@@ -347,7 +349,7 @@ if use_peft_local_checkpoint:
     peft_model_base = AutoModelForSeq2SeqLM.from_pretrained("google/flan-t5-base", torch_dtype=torch.bfloat16)
     tokenizer = AutoTokenizer.from_pretrained("google/flan-t5-base")
 
-    peft_model_path="./peft_dialogue_summary_checkpoint_local/"
+    peft_model_path = os.path.join('peft_dialogue_summary_checkpoint_local')
     peft_model = PeftModel.from_pretrained(peft_model_base, 
                                         peft_model_path, 
                                         torch_dtype=torch.bfloat16,
@@ -356,7 +358,7 @@ if use_peft_local_checkpoint:
 
 # Evaluate the Model Qualitatively (Human Evaluation)
 # Make inferences for the same example as in sections [1.3](#1.3) and [2.3](#2.3), with the original model, fully fine-tuned and PEFT model.
-evaluate_peft_model = True
+evaluate_peft_model = False
 if evaluate_peft_model:
     human_baseline_summary = dataset['test'][index]['summary']
     index = 200
