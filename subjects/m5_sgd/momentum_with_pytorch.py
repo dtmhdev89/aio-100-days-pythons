@@ -47,7 +47,8 @@ model_classifier = nn.Sequential(
 criterion = nn.CrossEntropyLoss()
 lr = 1e-2
 momentum = 0.8
-optimizer = optim.SGD(model_classifier.parameters(), lr=lr, momentum=momentum)
+optimizer = optim.SGD(model_classifier.parameters(),
+                      lr=lr, momentum=momentum, nesterov=True)
 
 epochs = 50
 losses = []
