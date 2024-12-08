@@ -38,7 +38,7 @@ def device():
 class DatasetLoader():
     def __init__(self) -> None:
         self.transform = self._init_transform()
-        self.batch_size = 1024
+        self.batch_size = 256
         self.num_workers = torch.multiprocessing.cpu_count() - 1
         self.trainloader, self.testloader = self._init_loader()
 
