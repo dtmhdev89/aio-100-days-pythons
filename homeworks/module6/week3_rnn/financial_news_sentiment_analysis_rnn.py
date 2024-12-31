@@ -1,12 +1,14 @@
 import sys
 import os
-sys.path.append(
-    os.path.dirname(
-        os.path.dirname(
-            os.path.dirname(
-                os.path.dirname(
-                    os.path.abspath(__file__)))))
-)
+
+up_levels = [".."] * 3
+PROJECT_ROOT = os.path.abspath(os.path.join(
+    os.path.dirname(__file__),
+    *up_levels
+))
+
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
 
 import gdown
 from zipfile import ZipFile
@@ -23,7 +25,7 @@ import re
 import nltk
 import unidecode
 
-from utils import nltk_download
+from utils.nltk_util import nltk_download
 nltk_download(['stopwords'])
 
 from nltk.corpus import stopwords
