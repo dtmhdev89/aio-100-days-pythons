@@ -32,7 +32,7 @@ from transformers import AutoConfig, AutoModelForSequenceClassification, \
 import numpy as np
 import evaluate
 import matplotlib.pyplot as plt
-
+import wandb
 
 # Transformer Encoder
 # # Token and Positional Embedding
@@ -762,6 +762,8 @@ if __name__ == "__main__":
             tokenizer=tokenizer,
         )
 
+        wandb.init(mode='disabled')
+
         trainer.train()
         trainer.evaluate(processed_dataset["test"])
 
@@ -771,3 +773,4 @@ if __name__ == "__main__":
         )
 
         print(classifier("quán ăn này ngon quá luôn nè"))
+        
