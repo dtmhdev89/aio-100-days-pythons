@@ -55,7 +55,7 @@ class UNet(nn.Module):
 
 
 @torch.inference_mode()
-def display_prediction(model, image, target, device, display_prediction):
+def display_prediction(model, image, target, device, predicted_path):
     model.eval()
     img = image[None, ...].to(device)
     output = model(img)
@@ -79,7 +79,7 @@ def display_prediction(model, image, target, device, display_prediction):
     plt.imshow(target)
 
     plt.savefig(
-        os.path.join(display_prediction, f'predicted_img_${get_timestamp()}')
+        os.path.join(predicted_path, f'predicted_img_${get_timestamp()}')
     )
     # plt.show()
 
@@ -166,8 +166,8 @@ if __name__ == "__main__":
     best_loss = float('inf')
     best_model_wts = copy.deepcopy(model.state_dict())
 
-    prediction_results = os.path.join(results_path, "1_cnn_segment")
-    os.makedirs(prediction_results, exist_ok=True)
+    predicted_path = os.path.join(results_path, "1_cnn_segment")
+    os.makedirs(predicted_path, exist_ok=True)
 
     model.to(device)
     for epoch in range(max_epoch):
@@ -189,7 +189,8 @@ if __name__ == "__main__":
             best_model_wts = copy.deepcopy(model.state_dict())
         print(f"Epoch [{epoch + 1}/{max_epoch}], Trainning loss: {epoch_loss:.4f}, Test Loss: {test_loss:.4f}")
         print(f"Test image_{test_index} after epoch {epoch+1}: ")
-        display_prediction(model, display_image, display_target, device, prediction_results)
+        display_prediction(model, display_image, display_target,
+                           device, predicted_path)
 
     train_losses.append(epoch_loss)
     test_losses.append(test_loss)
