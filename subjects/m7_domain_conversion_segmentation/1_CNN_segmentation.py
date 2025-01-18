@@ -1,18 +1,10 @@
 from common_libs import torch, np, plt, DataLoader, summary
-from data import PetDataLoader, create_target_transform
-from custom_utils import get_device, get_timestamp
+from data import PetDataLoader
+from custom_utils import get_device, get_timestamp, de_normalize, \
+    make_model_dir
 import torch.nn as nn
 import copy
 import os
-
-
-def de_normalize(img,
-                 mean=(0.485, 0.456, 0.406),
-                 std=(0.229, 0.224, 0.225)):
-    result = img * std + mean
-    result = np.clip(result, 0.0, 1.0)
-
-    return result
 
 
 class ConvBlock(nn.Module):
@@ -79,7 +71,7 @@ def display_prediction(model, image, target, device, predicted_path):
     plt.imshow(target)
 
     plt.savefig(
-        os.path.join(predicted_path, f'predicted_img_${get_timestamp()}')
+        os.path.join(predicted_path, f'predicted_img_{get_timestamp()}')
     )
     # plt.show()
 
@@ -194,3 +186,15 @@ if __name__ == "__main__":
 
     train_losses.append(epoch_loss)
     test_losses.append(test_loss)
+
+    model_path = make_model_dir()
+    model.load_state_dict(best_model_wts)
+    torch.save(model.state_dict(),
+               os.path.join(model_path, "1.CNN_segmentation.pt"))
+
+    n_test_points = 10
+
+    for i in range(n_test_points):
+        img, gt = test_set[i]
+
+        display_prediction(model, img, gt, device, predicted_path)

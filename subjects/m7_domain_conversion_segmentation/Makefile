@@ -34,7 +34,7 @@ venv: install_venv
 install_libs:
 	$(VENV_BIN)/$(PIP) install matplotlib ipykernel \
 		numpy \
-		torch torchsummary torchvision
+		safetensors torch torchsummary torchvision
 
 export_libs:
 	$(VENV_BIN)/$(PIP) freeze > requirements.txt
@@ -59,5 +59,8 @@ clean:
 
 run_test_1_cnn_segmentation: 1_CNN_segmentation.py
 	$(VENV_BIN)/$(PYTHON) 1_CNN_segmentation.py
+
+run_test_2_fcn: 2_FCN.py
+	$(VENV_BIN)/$(PYTHON) 2_FCN.py
 
 .PHONY: install_venv venv install_libs export_libs clean
