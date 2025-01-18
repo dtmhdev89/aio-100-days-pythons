@@ -91,6 +91,7 @@ if __name__ == "__main__":
     best_loss = float('inf')
     best_model_wts = copy.deepcopy(model.state_dict())
     predicted_path = os.path.join(results_path, '2_fcn')
+    os.makedirs(predicted_path, exist_ok=True)
 
     model.to(device)
     for epoch in range(max_epoch):
