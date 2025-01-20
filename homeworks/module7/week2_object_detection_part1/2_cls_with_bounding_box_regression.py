@@ -257,6 +257,9 @@ if __name__ == "__main__":
                 print(f'Epoch {epoch+1}/{num_epochs}, \
                       Validation Accuracy: {float(correct)/float(total)*100:.2f}%,'
                       f' Avg. Bbox Loss: {avg_loss_bbox:.4f}')
+                
+        model.load_state_dict(best_model_weights)
+        model_save_in_safetensors(model, save_model_path)
 
     if sys_options['inference']:
         model = models.resnet18(weights=None)
