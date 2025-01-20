@@ -57,4 +57,7 @@ clean:
 run_1_classification_single_object: 1_classification_single_object.py
 	$(VENV_BIN)/$(PYTHON) 1_classification_single_object.py $(SYSTEM_OPTION_ARGS)
 
+run_2_cls_with_bounding_box_regression: 2_cls_with_bounding_box_regression.py
+	$(VENV_BIN)/$(PYTHON) 2_cls_with_bounding_box_regression.py $(SYSTEM_OPTION_ARGS)
+
 .PHONY: install_venv venv install_libs export_libs clean
