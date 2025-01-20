@@ -34,7 +34,7 @@ venv: install_venv
 
 install_libs:
 	$(VENV_BIN)/$(PIP) install matplotlib ipykernel numpy pandas seaborn \
-		torch torchsummary torchvision sklearn kagglehub safetensors
+		torch torchsummary torchvision scikit-learn kagglehub safetensors
 
 export_libs:
 	$(VENV_BIN)/$(PIP) freeze > requirements.txt

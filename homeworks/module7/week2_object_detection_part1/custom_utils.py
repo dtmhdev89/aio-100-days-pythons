@@ -1,5 +1,5 @@
 import argparse
-from safetensors import save_file, load_model
+from safetensors.torch import save_file, load_model
 
 
 # Constant
