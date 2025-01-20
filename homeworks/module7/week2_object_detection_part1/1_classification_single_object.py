@@ -177,7 +177,7 @@ if __name__ == "__main__":
         # Training Loop
         num_epochs = 10
         best_model_weights = copy.deepcopy(model.state_dict())
-        best_eval_acc = 0
+        best_eval_acc = float(0)
 
         for epoch in range(num_epochs):
             model.train()
@@ -209,6 +209,7 @@ if __name__ == "__main__":
                 eval_acc = float(correct) / float(total)
                 if best_eval_acc < eval_acc:
                     best_model_weights = copy.deepcopy(model.state_dict())
+                    best_eval_acc = eval_acc
 
             print(f'Epoch {epoch+1}/{num_epochs}, \
                   Validation Accuracy: {float(correct)/float(total)*100:.2f}%')
