@@ -7,6 +7,7 @@ PIP = pip3
 VENV_NAME := .venv
 VENV_BIN = $(VENV_NAME)/bin
 PYTHON_TARGET_VERSION = 3.12
+SYSTEM_OPTION_ARGS ?=
 
 # Create virtual environment
 install_venv:
@@ -61,6 +62,6 @@ run_test_1_cnn_segmentation: 1_CNN_segmentation.py
 	$(VENV_BIN)/$(PYTHON) 1_CNN_segmentation.py
 
 run_test_2_fcn: 2_FCN.py
-	$(VENV_BIN)/$(PYTHON) 2_FCN.py
+	$(VENV_BIN)/$(PYTHON) 2_FCN.py $(SYSTEM_OPTION_ARGS)
 
 .PHONY: install_venv venv install_libs export_libs clean
