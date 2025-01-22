@@ -241,6 +241,7 @@ if __name__ == "__main__":
                 for img, cls in zip(batch_images, predictions):
                     plt.subplot(rows, max_img_in_a_row, col)
                     col = 1 if col == max_img_in_a_row else col
+                    plt.axis('off')
                     plt.title(f'Prediction: {REVERSE_LABELS[int(cls)]}')
                     plt.imshow(de_normalize(img.numpy().transpose(1, 2, 0)))
                     result_path = os.path.join('results')
