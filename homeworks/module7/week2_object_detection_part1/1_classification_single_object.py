@@ -238,18 +238,23 @@ if __name__ == "__main__":
                 max_img_in_a_row = 4
                 rows = int((len(batch_images) // max_img_in_a_row) + 1)
                 col = 1
-                for img, cls in zip(batch_images, predictions):
+                for img, cls in zip(batch_images, predictions.indices):
                     plt.subplot(rows, max_img_in_a_row, col)
                     col = 1 if col == max_img_in_a_row else col
                     plt.axis('off')
-                    plt.title(f'Prediction: {REVERSE_LABELS[int(cls)]}')
+                    x = img.shape[1] * 0.05  # 5% margin from the left
+                    y = img.shape[0] * 0.05  # 5% margin from the top
                     plt.imshow(de_normalize(img.numpy().transpose(1, 2, 0)))
-                    result_path = os.path.join('results')
-                    os.makedirs(result_path, exist_ok=True)
-                    plt.savefig(
-                        os.path.join(
-                            result_path,
-                            f'predicted_img_{get_timestamp()}'
-                        )
+                    plt.text(x=x, y=y,
+                             s=f'Prediction: {REVERSE_LABELS[int(cls)]}',
+                             color='black')
+
+                result_path = os.path.join('results')
+                os.makedirs(result_path, exist_ok=True)
+                plt.savefig(
+                    os.path.join(
+                        result_path,
+                        f'predicted_img_{get_timestamp()}'
                     )
+                )
                 break
