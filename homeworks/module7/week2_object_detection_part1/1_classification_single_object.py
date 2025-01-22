@@ -226,7 +226,9 @@ if __name__ == "__main__":
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         model.to(device)
 
-        load_model(model, save_model_path, strict=True)
+        load_model(model, save_model_path, strict=True, device=device)
         model.eval()
         with torch.no_grad():
-            pass
+            for batch_images, batch_labels in next(iter(val_loader)):
+                print(len(batch_images), len(batch_labels))
+                break
