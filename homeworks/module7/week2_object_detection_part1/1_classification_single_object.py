@@ -1,6 +1,6 @@
 from custom_utils import get_optional_args, \
     model_save_in_safetensors, load_model, de_normalize, \
-    get_timestamp, REVERSE_LABELS
+    get_timestamp, compute_textbox_coordinate
     
 import kagglehub
 import os
@@ -242,22 +242,10 @@ if __name__ == "__main__":
                     plt.subplot(rows, max_img_in_a_row, col)
                     col += 1
                     plt.axis('off')
-                    img_height, img_width, _ = img.shape
-                    x_margin = img.shape[1] * 0.05  # 5% margin from the left
-                    y_margin = img.shape[0] * 0.05  # 5% margin from the top
-                    # Get text bounding box (to calculate text height)
-                    # and add padding for text background
-                    text_str = f'Prediction: {REVERSE_LABELS[int(cls)]}'
-                    bbox = dict(facecolor='white', edgecolor='none', pad=2)
-                    text_bbox = plt.gca().text(x_margin, y_margin, text_str,
-                                               color='white', fontsize=12,
-                                               bbox=bbox).get_window_extent()
-                    text_height = text_bbox.height / plt.gcf().dpi
-
-                    # Calculate y-coordinate for bottom margin
-                    # calculate y with dpi
-                    y = img_height - y_margin - text_height * plt.gcf().dpi
-                    plt.text(x=x_margin, y=y,
+                    x, y, bbox, text_str = compute_textbox_coordinate(img=img,
+                                                                      cls=cls,
+                                                                      plt=plt)
+                    plt.text(x=x, y=y,
                              s=text_str,
                              color='black',
                              bbox=bbox)
