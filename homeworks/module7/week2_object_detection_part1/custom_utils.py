@@ -29,7 +29,7 @@ def args_parser():
                         ))
     args = parser.parse_args()
     options = {}
-    allowed_keys = ['train_stage', 'inference_stage']
+    allowed_keys = DEFAULT_SYS_OPTIONS.keys()
 
     for item in args.k_v_options:
         try:
