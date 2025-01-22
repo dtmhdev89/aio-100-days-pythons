@@ -262,9 +262,7 @@ if __name__ == "__main__":
         model_save_in_safetensors(model, save_model_path)
 
     if sys_options['inference']:
-        model = models.resnet18(weights=None)
-        num_ftrs = model.fc.in_features
-        model.fc = nn.Linear(num_ftrs, 2)  # 2 classes: cat and dog
+        model = TwoHeadedModel()
 
         device = "cuda" if torch.cuda.is_available() else 'cpu'
         predicted_results(model, val_loader, save_model_path, device)
