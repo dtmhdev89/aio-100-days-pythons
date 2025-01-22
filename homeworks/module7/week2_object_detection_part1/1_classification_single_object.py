@@ -248,7 +248,7 @@ if __name__ == "__main__":
                     # Get text bounding box (to calculate text height)
                     # and add padding for text background
                     text_str = f'Prediction: {REVERSE_LABELS[int(cls)]}'
-                    bbox = dict(facecolor='black', edgecolor='none', pad=2)
+                    bbox = dict(facecolor='while', edgecolor='none', pad=2)
                     text_bbox = plt.gca().text(x_margin, y_margin, text_str,
                                                color='white', fontsize=12,
                                                bbox=bbox).get_window_extent()
@@ -258,8 +258,9 @@ if __name__ == "__main__":
                     # calculate y with dpi
                     y = img_height - y_margin - text_height * plt.gcf().dpi
                     plt.text(x=x_margin, y=y,
-                             s=f'Prediction: {REVERSE_LABELS[int(cls)]}',
-                             color='black')
+                             s=text_str,
+                             color='black',
+                             bbox=bbox)
                     plt.imshow(de_normalize(img.numpy().transpose(1, 2, 0)))
 
                 result_path = os.path.join('results')
