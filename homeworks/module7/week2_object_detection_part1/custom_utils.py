@@ -11,6 +11,13 @@ DEFAULT_SYS_OPTIONS = {
     'inference': False
 }
 
+LABELS = {
+    'cat': 0,
+    'dog': 1
+}
+
+REVERSE_LABELS = {v: k for k, v in LABELS.items()}
+
 
 def args_parser():
     parser = argparse.ArgumentParser(

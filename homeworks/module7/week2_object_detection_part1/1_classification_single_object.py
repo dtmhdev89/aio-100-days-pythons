@@ -1,5 +1,7 @@
 from custom_utils import get_optional_args, \
-    model_save_in_safetensors, load_model, de_normalize, get_timestamp
+    model_save_in_safetensors, load_model, de_normalize, \
+    get_timestamp, REVERSE_LABELS
+    
 import kagglehub
 import os
 import torch
@@ -236,13 +238,17 @@ if __name__ == "__main__":
                 max_img_in_a_row = 4
                 rows = int((len(batch_images) // max_img_in_a_row) + 1)
                 col = 1
-                for img in batch_images:
+                for img, cls in zip(batch_images, predictions):
                     plt.subplot(rows, max_img_in_a_row, col)
                     col = 1 if col == max_img_in_a_row else col
+                    plt.title(f'Prediction: {REVERSE_LABELS[int(cls)]}')
                     plt.imshow(de_normalize(img.numpy().transpose(1, 2, 0)))
                     result_path = os.path.join('results')
                     os.makedirs(result_path, exist_ok=True)
                     plt.savefig(
-                        os.path.join(result_path, f'predicted_img_{get_timestamp()}')
+                        os.path.join(
+                            result_path,
+                            f'predicted_img_{get_timestamp()}'
+                        )
                     )
                 break
