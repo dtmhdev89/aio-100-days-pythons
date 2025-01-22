@@ -266,4 +266,5 @@ if __name__ == "__main__":
         num_ftrs = model.fc.in_features
         model.fc = nn.Linear(num_ftrs, 2)  # 2 classes: cat and dog
 
+        device = "cuda" if torch.cuda.is_available() else 'cpu'
         predicted_results(model, val_loader, save_model_path, device)
