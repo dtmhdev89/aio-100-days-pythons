@@ -1,5 +1,5 @@
 from custom_utils import get_optional_args, \
-    model_save_in_safetensors, load_model
+    model_save_in_safetensors, predicted_results
 import kagglehub
 import os
 import torch
@@ -266,13 +266,4 @@ if __name__ == "__main__":
         num_ftrs = model.fc.in_features
         model.fc = nn.Linear(num_ftrs, 2)  # 2 classes: cat and dog
 
-        # Device
-        device = "cuda" if torch.cuda.is_available() else "cpu"
-        model.to(device)
-
-        load_model(model, save_model_path, strict=True, device=device)
-        model.eval()
-        with torch.no_grad():
-            for batch_images, batch_labels in val_loader:
-                print(len(batch_images), len(batch_labels))
-                break
+        predicted_results(model, val_loader, save_model_path, device)
