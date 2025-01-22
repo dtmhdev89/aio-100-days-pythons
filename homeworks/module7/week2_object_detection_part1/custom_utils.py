@@ -1,5 +1,7 @@
 import argparse
 from safetensors.torch import save_file, load_model
+import numpy as np
+import datetime
 
 
 # Constant
@@ -61,6 +63,22 @@ def get_optional_args():
 def model_save_in_safetensors(model, safetensors_path):
     save_file(model.state_dict(), safetensors_path)
     print(f"Save successfully at {safetensors_path}")
+
+
+def de_normalize(img,
+                 mean=(0.485, 0.456, 0.406),
+                 std=(0.229, 0.224, 0.225)):
+    result = img * std + mean
+    result = np.clip(result, 0.0, 1.0)
+
+    return result
+
+
+def get_timestamp():
+    timestamp_format = "%Y%m%d_%H%M%S_%f"
+    timestamp = datetime.datetime.now().strftime(timestamp_format)
+
+    return timestamp
 
 
 if __name__ == "__main__":

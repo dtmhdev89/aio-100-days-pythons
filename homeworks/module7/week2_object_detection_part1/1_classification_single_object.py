@@ -1,5 +1,5 @@
 from custom_utils import get_optional_args, \
-    model_save_in_safetensors, load_model
+    model_save_in_safetensors, load_model, de_normalize, get_timestamp
 import kagglehub
 import os
 import torch
@@ -223,12 +223,26 @@ if __name__ == "__main__":
         model.fc = nn.Linear(num_ftrs, 2)  # 2 classes: cat and dog
 
         # Device
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        device = "cuda" if torch.cuda.is_available() else "cpu"
         model.to(device)
 
         load_model(model, save_model_path, strict=True, device=device)
         model.eval()
         with torch.no_grad():
-            for batch_images, batch_labels in next(iter(val_loader)):
-                print(len(batch_images), len(batch_labels))
+            for batch_images, batch_labels in val_loader:
+                scores = model(batch_images)
+                predictions = scores.max(1)
+                plt.figure(figsize=(10, 8))
+                max_img_in_a_row = 4
+                rows = int((len(batch_images) // max_img_in_a_row) + 1)
+                col = 1
+                for img in batch_images:
+                    plt.subplot(rows, max_img_in_a_row, col)
+                    col = 1 if col == max_img_in_a_row else col
+                    plt.imshow(de_normalize(img.numpy().transpose(1, 2, 0)))
+                    result_path = os.path.join('results')
+                    os.makedirs(result_path, exist_ok=True)
+                    plt.savefig(
+                        os.path.join(result_path, f'predicted_img_{get_timestamp()}')
+                    )
                 break

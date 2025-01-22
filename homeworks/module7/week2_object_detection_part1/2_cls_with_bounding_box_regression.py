@@ -267,10 +267,12 @@ if __name__ == "__main__":
         model.fc = nn.Linear(num_ftrs, 2)  # 2 classes: cat and dog
 
         # Device
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        device = "cuda" if torch.cuda.is_available() else "cpu"
         model.to(device)
 
-        load_model(model, save_model_path, strict=True)
+        load_model(model, save_model_path, strict=True, device=device)
         model.eval()
         with torch.no_grad():
-            pass
+            for batch_images, batch_labels in val_loader:
+                print(len(batch_images), len(batch_labels))
+                break
