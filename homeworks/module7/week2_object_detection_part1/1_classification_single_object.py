@@ -248,7 +248,7 @@ if __name__ == "__main__":
                     # Get text bounding box (to calculate text height)
                     # and add padding for text background
                     text_str = f'Prediction: {REVERSE_LABELS[int(cls)]}'
-                    bbox = dict(facecolor='while', edgecolor='none', pad=2)
+                    bbox = dict(facecolor='white', edgecolor='none', pad=2)
                     text_bbox = plt.gca().text(x_margin, y_margin, text_str,
                                                color='white', fontsize=12,
                                                bbox=bbox).get_window_extent()
