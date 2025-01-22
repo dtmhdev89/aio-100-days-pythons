@@ -2,6 +2,9 @@ import argparse
 from safetensors.torch import save_file, load_model
 import numpy as np
 import datetime
+import torch
+import matplotlib.pyplot as plt
+import os
 
 
 # Constant
@@ -88,7 +91,7 @@ def get_timestamp():
     return timestamp
 
 
-def compute_textbox_coordinate(img, cls, plt):
+def compute_textbox_coordinate(img, cls):
     img_height, img_width, _ = img.shape
     x_margin = img_width * 0.05  # 5% margin from the left
     y_margin = img_height * 0.05  # 5% margin from the top
@@ -107,6 +110,41 @@ def compute_textbox_coordinate(img, cls, plt):
     y = img_height - text_height * plt.gcf().dpi
 
     return x_margin, y, bbox, text_str
+
+
+def predicted_results(model, dataloader, model_path, device='cpu'):
+    model.to(device)
+    load_model(model, model_path, strict=True, device=device)
+    model.eval()
+    with torch.no_grad():
+        for batch_images, _batch_labels in dataloader:
+            scores = model(batch_images)
+            predictions = scores.max(1)
+            plt.figure(figsize=(10, 8))
+            max_img_in_a_row = 4
+            rows = int((len(batch_images) // max_img_in_a_row) + 1)
+            col = 1
+            for img, cls in zip(batch_images, predictions.indices):
+                plt.subplot(rows, max_img_in_a_row, col)
+                col += 1
+                plt.axis('off')
+                x, y, bbox, text_str = compute_textbox_coordinate(img=img,
+                                                                  cls=cls)
+                plt.text(x=x, y=y,
+                         s=text_str,
+                         color='black',
+                         bbox=bbox)
+                plt.imshow(de_normalize(img.numpy().transpose(1, 2, 0)))
+
+            result_path = os.path.join('results')
+            os.makedirs(result_path, exist_ok=True)
+            plt.savefig(
+                os.path.join(
+                    result_path,
+                    f'predicted_img_{get_timestamp()}'
+                )
+            )
+            break
 
 
 if __name__ == "__main__":

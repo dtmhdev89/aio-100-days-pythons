@@ -1,6 +1,5 @@
 from custom_utils import get_optional_args, \
-    model_save_in_safetensors, load_model, de_normalize, \
-    get_timestamp, compute_textbox_coordinate
+    model_save_in_safetensors, predicted_results
     
 import kagglehub
 import os
@@ -223,40 +222,6 @@ if __name__ == "__main__":
         model = models.resnet18(weights=None)
         num_ftrs = model.fc.in_features
         model.fc = nn.Linear(num_ftrs, 2)  # 2 classes: cat and dog
-
-        # Device
         device = "cuda" if torch.cuda.is_available() else "cpu"
-        model.to(device)
 
-        load_model(model, save_model_path, strict=True, device=device)
-        model.eval()
-        with torch.no_grad():
-            for batch_images, batch_labels in val_loader:
-                scores = model(batch_images)
-                predictions = scores.max(1)
-                plt.figure(figsize=(10, 8))
-                max_img_in_a_row = 4
-                rows = int((len(batch_images) // max_img_in_a_row) + 1)
-                col = 1
-                for img, cls in zip(batch_images, predictions.indices):
-                    plt.subplot(rows, max_img_in_a_row, col)
-                    col += 1
-                    plt.axis('off')
-                    x, y, bbox, text_str = compute_textbox_coordinate(img=img,
-                                                                      cls=cls,
-                                                                      plt=plt)
-                    plt.text(x=x, y=y,
-                             s=text_str,
-                             color='black',
-                             bbox=bbox)
-                    plt.imshow(de_normalize(img.numpy().transpose(1, 2, 0)))
-
-                result_path = os.path.join('results')
-                os.makedirs(result_path, exist_ok=True)
-                plt.savefig(
-                    os.path.join(
-                        result_path,
-                        f'predicted_img_{get_timestamp()}'
-                    )
-                )
-                break
+        predicted_results(model, val_loader, save_model_path, device)
