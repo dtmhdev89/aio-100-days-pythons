@@ -147,5 +147,9 @@ def predicted_results(model, dataloader, model_path, device='cpu'):
             break
 
 
+def predicted_results_w_bbox(model, dataloader, model_path, device='cpu'):
+    pass
+
+
 if __name__ == "__main__":
     pass
