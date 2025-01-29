@@ -6,6 +6,22 @@ PIP = pip3
 VIRTUALENV_PACKAGE := virtualenv
 VIRTUALENV_CMD := virtualenv
 
+TEMP_REPO := temp_repo
+REMOTE_REPO :=
+REMOTE_FOLDER_PATH :=
+
+# make temp repo for accessing on other platform like colab or kaggle
+load_code_on_temp_repo:
+	@if [ -z "$(TEMP_REPO)" ] || [ -z "$(REMOTE_REPO)" ] || [ -z "$(REMOTE_FOLDER_PATH)" ]; then \
+		echo "Error: One or more required variables are not set."; \
+	else \
+		!git init $(TEMP_REPO)
+		!cd $(TEMP_REPO) && git remote add origin $(REMOTE_REPO)
+		!cd $(TEMP_REPO) && git config core.sparseCheckout true
+		!echo "$(REMOTE_FOLDER_PATH)/*" > $(TEMP_REPO)/.git/info/sparse-checkout
+		!cd $(TEMP_REPO) && git pull
+	fi
+
 # install virtualenv
 install_virtualenv:
 	$(VENV_BIN)/$(PIP) install $(VIRTUALENV_PACKAGE)
