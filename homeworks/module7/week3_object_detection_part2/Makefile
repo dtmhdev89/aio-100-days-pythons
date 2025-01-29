@@ -24,7 +24,7 @@ load_code_on_temp_repo:
 
 # install virtualenv
 install_virtualenv:
-	$(VENV_BIN)/$(PIP) install $(VIRTUALENV_PACKAGE)
+	$(PIP) install $(VIRTUALENV_PACKAGE)
 
 venv: install_virtualenv
 	$(VIRTUALENV_CMD) $(VENV_NAME) -p $(PYTHON)
