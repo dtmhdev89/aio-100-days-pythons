@@ -30,7 +30,7 @@ venv: install_virtualenv
 	$(VIRTUALENV_CMD) $(VENV_NAME) -p $(PYTHON)
 
 install_libs:
-	$(VENV_BIN)/$(PIP) install -q numpy opencv-python ultralytics \
+	$(VENV_BIN)/$(PIP) install -q numpy opencv-python lap ultralytics \
 		matplotlib ipykernel
 
 install: requirements.txt
