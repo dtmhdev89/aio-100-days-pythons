@@ -4,7 +4,7 @@ import numpy as np
 from ultralytics import YOLO
 
 
-if __name__ == "main":
+if __name__ == "__main__":
     yolo_weights_name = "yolo11l.pt"
     model = YOLO(yolo_weights_name)
     video_path = "samples/vietnam.mp4"
