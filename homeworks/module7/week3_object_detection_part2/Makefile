@@ -39,6 +39,7 @@ install: requirements.txt
 export_requirments:
 	$(VENV_BIN)/$(PIP) freeze > requirements.txt
 
-run_1_obj_tracking_simple: 1_object_tracking_simple_vesion.py
+run_1_obj_tracking_simple: 1_object_tracking_simple_version.py
+	$(VENV_BIN)/$(PYTHON) 1_object_tracking_simple_version.py
 
 .PHONY: install_virtualenv venv install_libs export_requirments run_1_obj_tracking_simple
