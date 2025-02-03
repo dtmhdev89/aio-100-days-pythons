@@ -2,6 +2,7 @@ from collections import defaultdict
 import cv2
 import numpy as np
 from ultralytics import YOLO
+import os
 
 
 if __name__ == "__main__":
@@ -17,7 +18,7 @@ if __name__ == "__main__":
 
     # Create VideoWriter object
     video_name = video_path.split('/')[-1]
-    output_path = f"run/{video_name.split('.')[0]}_tracked.mp4"
+    output_path = os.path.join(f"run/{video_name.split('.')[0]}_tracked.mp4")
     fourrc = cv2.VideoWriter_fourcc(*"mp4v")
     out = cv2.VideoWriter(output_path, fourrc, fps, (width, height))
 
