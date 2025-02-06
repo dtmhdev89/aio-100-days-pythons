@@ -9,6 +9,7 @@ VIRTUALENV_CMD := virtualenv
 TEMP_REPO := temp_repo
 REMOTE_REPO :=
 REMOTE_FOLDER_PATH :=
+TARGET_ARGS :=
 
 # make temp repo for accessing on other platform like colab or kaggle
 load_code_on_temp_repo:
@@ -42,4 +43,7 @@ export_requirments:
 run_1_obj_tracking_simple: 1_object_tracking_simple_version.py
 	$(VENV_BIN)/$(PYTHON) 1_object_tracking_simple_version.py
 
-.PHONY: install_virtualenv venv install_libs export_requirments run_1_obj_tracking_simple
+run_2_obj_tracking_optimized: 2_object_tracking_optimized.py
+	$(VENV_BIN)/$(PYTHON) 2_object_tracking_optimized.py $(TARGET_ARGS)
+
+.PHONY: install_virtualenv venv install_libs export_requirments run_1_obj_tracking_simple run_2_obj_tracking_optimized
