@@ -32,7 +32,7 @@ venv: install_virtualenv
 
 install_libs:
 	$(VENV_BIN)/$(PIP) install -q numpy opencv-python lap ultralytics \
-		matplotlib ipykernel
+		matplotlib ipykernel tqdm loguru
 
 install: requirements.txt
 	$(VENV_BIN)/$(PIP) install -r requirements.txt
