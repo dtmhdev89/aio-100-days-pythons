@@ -32,7 +32,8 @@ venv: install_virtualenv
 
 install_libs:
 	$(VENV_BIN)/$(PIP) install -q numpy opencv-python lap ultralytics \
-		matplotlib ipykernel tqdm loguru
+		matplotlib ipykernel tqdm loguru shapely \
+		git+https://github.com/ultralytics/CLIP.git
 
 install: requirements.txt
 	$(VENV_BIN)/$(PIP) install -r requirements.txt
@@ -53,4 +54,4 @@ run_4_open_vocab_detection: 4_open_vocab_detection.py
 	$(VENV_BIN)/$(PYTHON) 4_open_vocab_detection.py $(TARGET_ARGS)
 
 .PHONY: install_virtualenv venv install_libs export_requirments run_1_obj_tracking_simple run_2_obj_tracking_optimized \
-	run_3_object_counting
+	run_3_object_counting run_4_open_vocab_detection
