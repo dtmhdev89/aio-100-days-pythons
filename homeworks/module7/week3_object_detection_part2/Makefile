@@ -46,4 +46,11 @@ run_1_obj_tracking_simple: 1_object_tracking_simple_version.py
 run_2_obj_tracking_optimized: 2_object_tracking_optimized.py
 	$(VENV_BIN)/$(PYTHON) 2_object_tracking_optimized.py $(TARGET_ARGS)
 
-.PHONY: install_virtualenv venv install_libs export_requirments run_1_obj_tracking_simple run_2_obj_tracking_optimized
+run_3_object_counting: 3_object_counting.py
+	$(VENV_BIN)/$(PYTHON) 3_object_counting.py $(TARGET_ARGS)
+
+run_4_open_vocab_detection: 4_open_vocab_detection.py
+	$(VENV_BIN)/$(PYTHON) 4_open_vocab_detection.py $(TARGET_ARGS)
+
+.PHONY: install_virtualenv venv install_libs export_requirments run_1_obj_tracking_simple run_2_obj_tracking_optimized \
+	run_3_object_counting
