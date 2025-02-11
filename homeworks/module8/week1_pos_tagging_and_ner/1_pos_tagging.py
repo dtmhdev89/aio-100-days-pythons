@@ -15,8 +15,8 @@ MAX_LEN = 256
 
 
 def build_label2id(tokens: List[List[str]]):
-    label2id = {}
-    id_counter = 0
+    label2id = {"0": 0}
+    id_counter = 1
     for token in [token for sublist in tokens for token in sublist]:
         if token not in label2id:
             label2id[token] = id_counter
