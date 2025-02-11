@@ -72,9 +72,9 @@ venv_cleanup:
 	fi
 
 run_1_pos_tagging: 1_pos_tagging.py
-	$(VENV_BIN)/$(PYTHON) 1_medical_ner.py
+	$(VENV_BIN)/$(PYTHON) 1_pos_tagging.py
 
 run_2_medical_ner: 2_medical_ner.py
 	$(VENV_BIN)/$(PYTHON) 2_medical_ner.py
 
-.PHONY: install_virtualenv venv install_libs export_requirments run_1_medical_ner
+.PHONY: install_virtualenv venv install_libs export_requirments run_1_pos_tagging run_2_medical_ner
