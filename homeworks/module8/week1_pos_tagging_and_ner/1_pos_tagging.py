@@ -7,22 +7,12 @@ from sklearn.model_selection import train_test_split
 import nltk
 nltk.download('treebank')
 from transformers import AutoTokenizer, AutoModelForTokenClassification, \
-    TrainingArguments, Trainer
+    TrainingArguments, Trainer, AutoConfig
 from torch.utils.data import Dataset
+from collections import defaultdict
 
 
 MAX_LEN = 256
-
-
-def build_label2id(tokens: List[List[str]]):
-    label2id = {"0": 0}
-    id_counter = 1
-    for token in [token for sublist in tokens for token in sublist]:
-        if token not in label2id:
-            label2id[token] = id_counter
-            id_counter += 1
-    return label2id
-
 
 def closure_compute_metrics(accuracy, ignore_label):
     def compute_metrics(eval_pred):
@@ -115,7 +105,11 @@ if __name__ == "__main__":
         model_name,
         use_fast=True
     )
-    label2id = build_label2id(tokens=sentence_tags)
+
+    # Modeling
+    model = AutoModelForTokenClassification.from_pretrained(model_name)
+
+    label2id = defaultdict(int, model.config.label2id)
     id2label = {v: k for k, v in label2id.items()}
 
     # Dataset loader
@@ -137,9 +131,6 @@ if __name__ == "__main__":
         tokenizer=tokenizer,
         label2id=label2id
     )
-
-    # Modeling
-    model = AutoModelForTokenClassification.from_pretrained(model_name)
 
     # Metric
     accuracy = evaluate.load('accuracy')
