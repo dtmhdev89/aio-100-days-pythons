@@ -11,6 +11,9 @@ import evaluate
 import numpy as np
 
 
+MAX_LEN = 512
+
+
 class Preprocessing_Maccrobat:
     def __init__(self, dataset_folder, tokenizer):
         self.file_ids = [f.split(".")[0] for f in os.listdir(dataset_folder) if f.endswith('.txt')]
@@ -247,8 +250,6 @@ if __name__ == "__main__":
         test_size=0.2,
         random_state=42
     )
-
-    MAX_LEN = 512
 
     train_set = NER_Dataset(inputs_train, labels_train, tokenizer, label2id)
     val_set = NER_Dataset(inputs_val, labels_val, tokenizer, label2id)
