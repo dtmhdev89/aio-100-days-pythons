@@ -1,5 +1,14 @@
 import os
 from typing import List, Dict, Tuple
+from transformers import AutoTokenizer
+from transformers import TrainingArguments, Trainer
+from transformers import AutoModelForTokenClassification
+from transformers import pipeline
+from sklearn.model_selection import train_test_split
+import torch
+from torch.utils.data import Dataset
+import evaluate
+import numpy as np
 
 
 class Preprocessing_Maccrobat:
@@ -135,5 +144,171 @@ class Preprocessing_Maccrobat:
         return ranges
 
 
+class NER_Dataset(Dataset):
+    def __init__(self, input_texts, input_labels, tokenizer, label2id, max_len=MAX_LEN):
+        super().__init__()
+        self.tokens = input_texts
+        self.labels = input_labels
+        self.tokenizer = tokenizer
+        self.label2id = label2id
+        self.max_len = max_len
+
+    def __len__(self):
+        return len(self.tokens)
+
+    def __getitem__(self, idx):
+        ### Your Code Here
+
+    def pad_and_truncate(self, inputs: List[int], pad_id: int):
+        if len(inputs) < self.max_len:
+            padded_inputs = inputs + [pad_id] * (self.max_len - len(inputs))
+        else:
+            padded_inputs = inputs[:self.max_len]
+        return padded_inputs
+
+    def label2id(self, labels: List[str]):
+        return [self.label2id[label] for label in labels]
+
+
+def compute_metrics(eval_pred):
+    predictions, labels = eval_pred
+    mask = labels != 0
+    predictions = np.argmax(predictions, axis=-1)
+    return accuracy.compute(predictions=predictions[mask], references=labels[mask])
+
+
+def inference(tokenizer, sentence, model, device):
+    input = torch.as_tensor([tokenizer.convert_tokens_to_ids(sentence.split())])
+    input = input.to(device)
+    with torch.no_grad():
+        outputs = model(input)
+    _, preds = torch.max(outputs.logits, -1)
+    preds = preds[0].cpu().numpy()
+
+    return preds
+
+
+def merge_entity(sentence, preds, model):
+    merged_list = []
+    prev_value = None
+    temp_keys = []
+
+    for key, value in zip(sentence.split(), preds):
+        value = model.config.id2label[value].split('-')[-1]
+        if value == "O":
+            if temp_keys:
+                merged_list.append((prev_value, ", ".join(temp_keys)))
+                temp_keys = []
+            merged_list.append((value, key))
+            prev_value = None
+        elif value == prev_value:
+            temp_keys.append(key)
+        else:
+            if temp_keys:
+                merged_list.append((prev_value, " ".join(temp_keys)))
+            temp_keys = [key]
+            prev_value = value
+
+    if temp_keys:
+        merged_list.append((prev_value, ", ".join(temp_keys)))
+
+    return merged_list
+
+
 if __name__ == "__main__":
-    pass
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    tokenizer = AutoTokenizer.from_pretrained("d4data/biomedical-ner-all")
+
+    dataset_folder = os.path.join("MACCROBAT2018")
+
+    Maccrobat_builder = Preprocessing_Maccrobat(dataset_folder, tokenizer)
+    input_texts, input_labels = Maccrobat_builder.process()
+
+    label2id = Preprocessing_Maccrobat.build_label2id(input_labels)
+    id2label = {v: k for k, v in label2id.items()}
+
+    inputs_train, inputs_val, labels_train, labels_val = train_test_split(
+        input_texts,
+        input_labels,
+        test_size=0.2,
+        random_state=42
+    )
+
+    MAX_LEN = 512
+
+    train_set = NER_Dataset(inputs_train, labels_train, tokenizer, label2id)
+    val_set = NER_Dataset(inputs_val, labels_val, tokenizer, label2id)
+
+    model_name = "d4data/biomedical-ner-all"
+    model = AutoModelForTokenClassification.from_pretrained(
+        model_name,
+        label2id=label2id,
+        id2label=id2label,
+        ignore_mismatched_sizes=True
+    )
+
+    print(model)
+
+    os.environ["WANDB_DISABLED"] = "true"
+
+    accuracy = evaluate.load("accuracy")
+
+    result_output_dir = os.path.join("ner-biomedical-maccrobat2018")
+    os.makedirs(result_output_dir, exist_ok=True)
+
+    training_args = TrainingArguments(
+        output_dir=result_output_dir,
+        learning_rate=1e-4,
+        per_device_train_batch_size=16,
+        per_device_eval_batch_size=16,
+        num_train_epochs=20,
+        eval_strategy="epoch",
+        save_strategy="epoch",
+        logging_strategy="epoch",
+        load_best_model_at_end=True,
+        optim="adamw_torch"
+    )
+
+    trainer = Trainer(
+        model=model,
+        args=training_args,
+        train_dataset=train_set,
+        eval_dataset=val_set,
+        tokenizer=tokenizer,
+        compute_metrics=compute_metrics,
+    )
+
+    trainer.train()
+
+    # Push to your hugging face
+    # trainer.push_to_hub(
+    #     commit_message="Training complete",
+    #     token=<your_hugging_face_token>
+    # )
+
+    sentence = """A 48 year - old female presented with vaginal bleeding and abnormal Pap smears .
+    Upon diagnosis of invasive non - keratinizing SCC of the cervix ,
+    she underwent a radical hysterectomy with salpingo - oophorectomy
+    which demonstrated positive spread to the pelvic lymph nodes and the parametrium .
+    Pathological examination revealed that the tumour also extensively involved the lower uterine segment .
+    """
+    preds = inference(
+        tokenizer=tokenizer,
+        sentence=sentence,
+        model=model,
+        device=device
+    )
+    results = merge_entity(sentence, preds, model)
+
+    print("results: ", results)
+
+    model_checkpoint = "thainq107/ner-biomedical-maccrobat2018"
+    token_classifier = pipeline(
+        "token-classification",
+        model=model_checkpoint,
+        aggregation_strategy="simple"
+    )
+    results = token_classifier(sentence)
+
+    print("from checkpoint model: ", results)
+

@@ -181,5 +181,5 @@ if __name__ == "__main__":
     pred_tags = ""
     for pred in preds:
         pred_tags += id2label[pred] + " "
-    
+
     print(pred_tags)
