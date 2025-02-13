@@ -157,7 +157,21 @@ class NER_Dataset(Dataset):
         return len(self.tokens)
 
     def __getitem__(self, idx):
-        ### Your Code Here
+        input_token = self.tokens[idx]
+        label_token = [self.label2id[label] for label in self.labels[idx]]
+
+        input_token = self.tokenizer.convert_tokens_to_ids(input_token)
+        attention_mask = [1] * len(input_token)
+
+        input_ids = self.pad_and_truncate(input_token, pad_id= self.tokenizer.pad_token_id)
+        labels = self.pad_and_truncate(label_token, pad_id=0)
+        attention_mask = self.pad_and_truncate(attention_mask, pad_id=0)
+
+        return {
+            "input_ids": torch.as_tensor(input_ids),
+            "labels": torch.as_tensor(labels),
+            "attention_mask": torch.as_tensor(attention_mask)
+            }
 
     def pad_and_truncate(self, inputs: List[int], pad_id: int):
         if len(inputs) < self.max_len:
