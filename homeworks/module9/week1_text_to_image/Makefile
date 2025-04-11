@@ -15,8 +15,8 @@ venv: install_virtualenv
 	$(VIRTUALENV_CMD) $(VENV_NAME) -p $(PYTHON)
 
 install_libs:
-	$(VENV_BIN)/$(PIP) install -q numpy matplotlib ipykernel \
-		nltk torch==2.4 torchvision==0.19 pillow
+	$(VENV_BIN)/$(PIP) install -q torch==2.4 torchvision==0.19 numpy \
+		matplotlib ipykernel nltk  pillow tokenizers
 
 export_requirments:
 	$(VENV_BIN)/$(PIP) freeze > requirements.txt
