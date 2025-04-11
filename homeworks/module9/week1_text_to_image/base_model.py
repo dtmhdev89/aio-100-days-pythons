@@ -11,7 +11,7 @@ from torch.utils.data import Dataset, DataLoader
 from PIL import Image
 from nltk.tokenize import word_tokenize
 from collections import Counter
-from homeworks.module9.week1_text_to_image.download_dataset import download_flickr8k
+from download_dataset import download_flickr8k
 from dataset_builder import Flickr8kDataset
 
 download_flickr8k()
