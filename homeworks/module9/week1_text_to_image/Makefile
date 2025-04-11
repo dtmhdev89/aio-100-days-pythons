@@ -29,4 +29,7 @@ venv_cleanup:
 		echo "$(VENV_NAME) not found, nothing to remove."; \
 	fi
 
+run_base_model: base_model.py
+	$(VENV_BIN)/$(PYTHON) base_model.py
+
 .PHONY: install_virtualenv venv install_libs export_requirments
