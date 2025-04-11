@@ -7,7 +7,7 @@ import torch.nn as nn
 import torch.optim as optim
 import torchvision.transforms as transforms
 import torchvision.utils as vutils
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import DataLoader
 from PIL import Image
 from nltk.tokenize import word_tokenize
 from collections import Counter
