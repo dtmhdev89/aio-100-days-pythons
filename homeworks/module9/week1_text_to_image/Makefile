@@ -16,7 +16,8 @@ venv: install_virtualenv
 
 install_libs:
 	$(VENV_BIN)/$(PIP) install -q torch==2.4 torchvision==0.19 numpy \
-		matplotlib ipykernel nltk  pillow tokenizers transformers
+		matplotlib ipykernel nltk  pillow tokenizers transformers \
+		gdown
 
 export_requirments:
 	$(VENV_BIN)/$(PIP) freeze > requirements.txt
@@ -31,5 +32,8 @@ venv_cleanup:
 
 run_base_model: base_model.py
 	$(VENV_BIN)/$(PYTHON) base_model.py
+
+run_model_dcgan_bert: model_dcgan_bert.py
+	$(VENV_BIN)/$(PYTHON) model_dcgan_bert.py
 
 .PHONY: install_virtualenv venv install_libs export_requirments

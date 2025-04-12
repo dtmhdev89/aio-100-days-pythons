@@ -1,6 +1,7 @@
 import os
 import urllib.request
 import zipfile
+import gdown
 
 
 def download_flickr8k(dataset_dir="Flickr8k"):
@@ -26,6 +27,21 @@ def download_flickr8k(dataset_dir="Flickr8k"):
 
             os.remove(zip_path)  # Xóa file ZIP sau khi giải nén
     
+    print("✅ Dataset downloaded & extracted!")
+
     return os.path.join(dataset_dir)
 
-    print("✅ Dataset downloaded & extracted!")
+
+def download_cvpr2016_flowers():
+    base_path = os.path.join('./cvpr2016_flowers')
+    download_path = gdown.download(
+        id='1JJjMiNieTz7xYs6UeVqd02M3DW4fnEfU',
+        output=base_path
+    )
+
+    zip_path = os.path.join(download_path, "cvpr2016_flowers.zip")
+
+    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        zip_ref.extractall(base_path)
+
+    return base_path
