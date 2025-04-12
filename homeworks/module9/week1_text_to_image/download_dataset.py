@@ -2,6 +2,7 @@ import os
 import urllib.request
 import zipfile
 import gdown
+import time
 
 
 def download_flickr8k(dataset_dir="Flickr8k"):
@@ -36,22 +37,35 @@ def download_cvpr2016_flowers():
     base_path = os.path.join('./cvpr2016_flowers')
     os.makedirs(base_path, exist_ok=True)
 
-    gdown.download(
-        id='1JJjMiNieTz7xYs6UeVqd02M3DW4fnEfU',
-        output=base_path
-    )
+    max_attempts = 3
+    retry_delay = 5
 
-    zip_path = os.path.join(base_path, "cvpr2016_flowers.zip")
+    attempt = 0
 
-    count = 1
-    while count < 3000:
-        if not os.path.exists(zip_path):
-            count += 1
-            print(count)
-        else:
-            break
+    while attempt < max_attempts:
+        attempt += 1
+        print(f"Attempting download #{attempt}...")
 
-    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-        zip_ref.extractall(base_path)
+        try:
+            gdown.download(
+                id='1JJjMiNieTz7xYs6UeVqd02M3DW4fnEfU',
+                use_cookies=True
+            )
+            zip_path = os.path.join("./", "cvpr2016_flowers.zip")
 
-    return base_path
+            if os.path.exists(zip_path):
+                print("Download successful!")
+                with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+                    zip_ref.extractall(base_path)
+
+                os.remove(zip_path)
+                
+                return base_path
+            else:
+                print("Download failed to produce the ZIP file.")
+                time.sleep(retry_delay)
+        except Exception as e:
+            print(f"An error occurred during download: {e}")
+            time.sleep(retry_delay)
+
+    return None
