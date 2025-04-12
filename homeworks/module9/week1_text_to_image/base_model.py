@@ -17,8 +17,7 @@ from dataset_builder import Flickr8kDataset
 download_flickr8k()
 
 
-from preprocessing_dataset import caption as dataset_captions
-from preprocessing_dataset import text as dataset_text
+from preprocessing_dataset import process_data
 from tokenizers import Tokenizer, pre_tokenizers, trainers, models
 from transformers import PreTrainedTokenizerFast
 import nltk
@@ -54,6 +53,10 @@ class TokenizerBuilder():
 
         return tokenizer, vocab, word_to_id
 
+
+dataset_captions, dataset_text = process_data()
+
+print("Số lượng ảnh hợp lệ:", len(dataset_captions))
 
 tokenizer_builder = TokenizerBuilder(
     dataset_text=dataset_text,
