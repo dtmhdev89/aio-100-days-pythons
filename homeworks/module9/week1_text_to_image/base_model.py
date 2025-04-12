@@ -14,7 +14,7 @@ from collections import Counter
 from download_dataset import download_flickr8k
 from dataset_builder import Flickr8kDataset
 
-download_flickr8k()
+dataset_dir = download_flickr8k()
 
 
 from preprocessing_dataset import process_data
@@ -82,7 +82,7 @@ transform = transforms.Compose([
 ])
 
 dataset = Flickr8kDataset(
-    img_dir="/content/Flickr8k/Flicker8k_Dataset",
+    img_dir=os.path.join(dataset_dir, "Flicker8k_Dataset"),
     captions=dataset_captions,
     tokenizer=tokenizer,
     transform=transform

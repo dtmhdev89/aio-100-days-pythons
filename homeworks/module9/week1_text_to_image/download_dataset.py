@@ -25,5 +25,7 @@ def download_flickr8k(dataset_dir="Flickr8k"):
                 zip_ref.extractall(dataset_dir)
 
             os.remove(zip_path)  # Xóa file ZIP sau khi giải nén
+    
+    return os.path.join(dataset_dir)
 
     print("✅ Dataset downloaded & extracted!")
