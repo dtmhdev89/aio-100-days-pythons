@@ -44,9 +44,10 @@ def download_cvpr2016_flowers():
     zip_path = os.path.join(base_path, "cvpr2016_flowers.zip")
 
     count = 1
-    while count < 5:
+    while count < 3000:
         if not os.path.exists(zip_path):
             count += 1
+            print(count)
         else:
             break
 
