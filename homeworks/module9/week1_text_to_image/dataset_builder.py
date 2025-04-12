@@ -37,3 +37,34 @@ class Flickr8kDataset(Dataset):
             'image': image,
             'caption': encoded_caption
         }
+
+
+class FlowerDataset(Dataset):
+    def __init__(self, img_dir, captions, transform=None):
+        self.img_dir = img_dir
+        self.transform = transform
+
+        # Load captions
+        self.captions = captions
+
+        self.img_names = list(self.captions.keys())
+
+    def __len__(self):
+        return len(self.img_names)
+
+    def __getitem__(self, idx):
+        img_name = self.img_names[idx]
+        img_path = os.path.join(self.img_dir, img_name+".jpg")
+        image = Image.open(img_path).convert("RGB")
+
+        if self.transform:
+            image = self.transform(image)
+
+        encoded_caption = self.captions[img_name]['embed']
+        caption = self.captions[img_name]['text']
+
+        return {
+            'image': image,
+            'embed_caption': encoded_caption,
+            'text': caption
+        }
