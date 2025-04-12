@@ -413,3 +413,4 @@ for epoch in range(epochs):
         avg_d_loss,
         avg_g_loss,
         time.time() - epoch_time)
+    )
